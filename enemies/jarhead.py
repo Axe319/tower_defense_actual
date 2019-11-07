@@ -27,3 +27,4 @@ class Jarhead(Enemy):
       self.enemy_directions = 2
       self.total_animations = 19
       self.health = 1.5
+      self.reward = 8

@@ -27,3 +27,4 @@ class Fork(Enemy):
       self.enemy_directions = 2
       self.total_animations = 19
       self.health = 2
+      self.reward = 10

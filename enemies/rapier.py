@@ -27,3 +27,4 @@ class Rapier(Enemy):
       self.enemy_directions = 2
       self.total_animations = 19
       self.health = 3
+      self.reward = 15

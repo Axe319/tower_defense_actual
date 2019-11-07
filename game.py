@@ -26,10 +26,14 @@ class Game:
       self.map_choice = 1
       self.paths = self.map.map_paths[self.map_choice]
       self.bg = self.map.maps[self.map_choice]
-
+      self.shop = Shop()
       self.clock = pygame.time.Clock()
+      self.timer_font = pygame.font.SysFont("comicsans", 65)
+      self.money_font = pygame.font.SysFont("comicsans", 65)
+
       self.towers = []
       self.enemies = [] # enemy instances this wave
+
       self.wave_active = True
       self.last_enemy_gen = time.time() + 10 # give 10 seconds to prep
       self.enemies_this_wave = 0 # enemies we've generated this wave
@@ -40,8 +44,7 @@ class Game:
       self.gen_interval = 1.5 # the current interval to gen enemies
       self.min_gen_interval = 1.5 # minimum interval to gen enemies
       self.all_enemies_count = 6 # max number of classes
-      self.timer_font = pygame.font.SysFont("comicsans", 65)
-      self.shop = Shop()
+      self.money = 150
       self.clicks = []
 
    def run(self):
@@ -94,6 +97,7 @@ class Game:
       to_del = []
       count_down = int(round(self.gen_interval - (time.time() - self.last_enemy_gen)))
       text = self.timer_font.render(str(count_down), 1, (255, 0, 0))
+      money = self.money_font.render('$' + str(self.money), 1, (176, 179, 29))
 
       self.window.blit(self.bg, (0, 0))
 
@@ -115,6 +119,7 @@ class Game:
       drawables.sort(key=lambda tup: tup[1])
 
       for item in to_del:
+         self.money += item.reward
          self.enemies.remove(item)
          self.enemies_killed_this_wave += 1
 
@@ -146,6 +151,7 @@ class Game:
 
       if count_down > 0 and self.enemies_this_wave == 0:
          self.window.blit(text, (13, 13))
+      self.window.blit(money, (13, self.height - 64))
 
       self.del_unbought_towers()
 

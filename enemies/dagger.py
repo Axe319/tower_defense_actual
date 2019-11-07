@@ -27,3 +27,4 @@ class Dagger(Enemy):
       self.enemy_directions = 2
       self.total_animations = 19
       self.health = 1
+      self.reward = 5
