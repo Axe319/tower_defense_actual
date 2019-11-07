@@ -20,13 +20,14 @@ for i in range(1, 6):
 
 class Wood(Towers):
    def __init__(self):
-      self.x = 550
-      self.y = 250
+      self.x = 555
+      self.y = 275
       self.range = 200
       self.level = 1
       self.all_images = imgs
       self.fire_speed = 2.4
       self.damage = 1
+      self.price = 125
       super().__init__()
 
    def move_with_base(self):

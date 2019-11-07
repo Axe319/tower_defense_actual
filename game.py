@@ -28,8 +28,8 @@ class Game:
       self.bg = self.map.maps[self.map_choice]
       self.shop = Shop()
       self.clock = pygame.time.Clock()
-      self.timer_font = pygame.font.SysFont("comicsans", 65)
-      self.money_font = pygame.font.SysFont("comicsans", 65)
+      self.timer_font = pygame.font.SysFont('comicsans', 65)
+      self.money_font = pygame.font.SysFont('comicsans', 65)
 
       self.towers = []
       self.enemies = [] # enemy instances this wave
@@ -68,7 +68,9 @@ class Game:
                   if tower.moving:
                      # add more logic later to make sure not colliding and enough moneys is had
                      tower.moving = False
-                     tower.bought = True
+                     if tower.price <= self.money:
+                        tower.bought = True
+                        self.money -= tower.price
 
             if pygame.mouse.get_pressed()[0]:
                mouse_position = pygame.mouse.get_pos()
@@ -97,7 +99,7 @@ class Game:
       to_del = []
       count_down = int(round(self.gen_interval - (time.time() - self.last_enemy_gen)))
       text = self.timer_font.render(str(count_down), 1, (255, 0, 0))
-      money = self.money_font.render('$' + str(self.money), 1, (176, 179, 29))
+      money = self.money_font.render(str(self.money), 1, (255, 200, 0))
 
       self.window.blit(self.bg, (0, 0))
 
@@ -151,7 +153,8 @@ class Game:
 
       if count_down > 0 and self.enemies_this_wave == 0:
          self.window.blit(text, (13, 13))
-      self.window.blit(money, (13, self.height - 64))
+      self.window.blit(self.shop.images['star'], (13, self.height - 64))
+      self.window.blit(money, (39, self.height - 64))
 
       self.del_unbought_towers()
 
