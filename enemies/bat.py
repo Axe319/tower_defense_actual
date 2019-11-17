@@ -40,4 +40,4 @@ class Bat(Enemy):
       self.enemy_directions = 4
       self.total_animations = 24
       self.health = 3.5
-      self.reward = 20
+      self.reward = 10

@@ -26,7 +26,7 @@ class Wood(Towers):
       self.level = 1
       self.all_images = imgs
       self.fire_speed = 2.4
-      self.damage = 1
+      self.damage = .75
       self.price = 125
       super().__init__()
 

@@ -212,7 +212,7 @@ class Game:
       if self.max_level < self.all_enemies_count:
          self.max_level += 1
       if self.min_gen_interval > .5:
-         self.min_gen_interval -= .05
+         self.min_gen_interval -= .1
       self.enemies_killed_this_wave = 0
       self.wave_active = True
       self.last_enemy_gen = time.time() + 10 # give 10 seconds to prep
@@ -241,11 +241,12 @@ class Game:
       """
       for index, tower in enumerate(self.towers):
          if not tower.bought:
-            if mouse_position[0] > tower.x - (tower.width / 2):
-               if mouse_position[0] < tower.x + (tower.width / 2):
-                  if mouse_position[1] > tower.y - (tower.height / 2):
-                     if mouse_position[1] < tower.y + (tower.height / 2):
-                        return index
+            if tower.price <= self.money:
+               if mouse_position[0] > tower.x - (tower.width / 2):
+                  if mouse_position[0] < tower.x + (tower.width / 2):
+                     if mouse_position[1] > tower.y - (tower.height / 2):
+                        if mouse_position[1] < tower.y + (tower.height / 2):
+                           return index
 
    def del_unbought_towers(self):
       to_del = []
