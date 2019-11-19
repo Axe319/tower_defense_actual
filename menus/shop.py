@@ -1,6 +1,7 @@
 import pygame
 import os
 from towers.wood import Wood
+from towers.steel import Steel
 
 imgs = {}
 image = pygame.image.load(os.path.join('assets', 'general', 'table.png'))
@@ -94,5 +95,6 @@ class Shop:
                if position[1] < self.height:
                   collided = True
                   towers.append(Wood())
+                  towers.append(Steel())
 
       return collided
