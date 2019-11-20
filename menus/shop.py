@@ -2,6 +2,7 @@ import pygame
 import os
 from towers.wood import Wood
 from towers.steel import Steel
+from towers.fire import Fire
 
 imgs = {}
 image = pygame.image.load(os.path.join('assets', 'general', 'table.png'))
@@ -96,5 +97,6 @@ class Shop:
                   collided = True
                   towers.append(Wood())
                   towers.append(Steel())
+                  towers.append(Fire())
 
       return collided
