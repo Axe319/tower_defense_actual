@@ -56,17 +56,19 @@ class Fire(Towers):
          self.fire_animation_front.append((self.base[0], position + (self.height / 6) - 4, self.all_images['front' + str(self.level)]))
 
       if self.target is not None:
-         ammo_movement = (self.target_x - self.x) / (len(self.fire_animation_ammo) * 3)
-      else:
-         ammo_movement = 0
+         self.ammo_path = self.get_path((ammo_x, ammo_y), (self.target_x - 12, self.target_y))
 
-      while position < self.back[1]:
-         position += self.fire_speed
-         ammo_y -= (self.fire_speed * 2)
-         ammo_x += ammo_movement
-         self.fire_animation_back.append((self.base[0], position, self.all_images['back' + str(self.level)]))
-         self.fire_animation_ammo.append((ammo_x, ammo_y, self.all_images['ammo']))
-         self.fire_animation_front.append((self.base[0], position + (self.height / 6) - 4, self.all_images['front' + str(self.level)]))
+         self.ammo_element = 0
+
+         while position < self.back[1]:
+            position += self.fire_speed
+            ammo_x = self.ammo_path[self.ammo_element][0]
+            ammo_y = self.ammo_path[self.ammo_element][1]
+            self.ammo_element += 1
+            self.fire_animation_back.append((self.base[0], position, self.all_images['back' + str(self.level)]))
+            self.fire_animation_ammo.append((ammo_x, ammo_y, self.all_images['ammo']))
+            self.fire_animation_front.append((self.base[0], position + (self.height / 6) - 4, self.all_images['front' + str(self.level)]))
+         self.ammo_element -= 1
 
       self.current_x = ammo_x
       self.current_y = ammo_y

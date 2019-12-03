@@ -1,6 +1,7 @@
 import math
 import os
 import pygame
+from typing import List, Tuple
 
 
 class Towers:
@@ -24,6 +25,8 @@ class Towers:
       self.back = ()
       self.front = ()
       self.ammo = ()
+      self.ammo_path = []
+      self.ammo_element = 0
       self.firing_animation_count = 0
       self.fire_movements = 0
       self.enemy_movements = 0
@@ -86,36 +89,14 @@ class Towers:
          self.fire_movements = len(self.fire_animation_ammo)
 
          hit_target = False
-         while not hit_target:
+         for path in self.ammo_path[self.ammo_element:]:
             self.fire_movements += 1
-            next_coordinate = self.get_next_coordinate((self.current_x, self.current_y), (self.target_x, self.target_y), self.fire_speed*2)
+            next_coordinate = path
             self.fire_animation_back.append(self.back)
             self.fire_animation_ammo.append((next_coordinate[0], next_coordinate[1], self.all_images['ammo']))
             self.fire_animation_front.append(self.front)
-            if self.current_x > self.target_x: #moving left
-               if self.current_y > self.target_y: #moving up
-                  if next_coordinate[0] <= self.target_x:
-                     hit_target = True
-                  elif next_coordinate[1] <= self.target_y:
-                     hit_target = True
-               else: # moving down
-                  if next_coordinate[0] <= self.target_x:
-                     hit_target = True
-                  elif next_coordinate[1] >= self.target_y:
-                     hit_target = True
-            else: #moving right
-               if self.current_y > self.target_y:  # moving up
-                  if next_coordinate[0] >= self.target_x:
-                     hit_target = True
-                  elif next_coordinate[1] <= self.target_y:
-                     hit_target = True
-               else: # moving down
-                  if next_coordinate[0] >= self.target_x:
-                     hit_target = True
-                  elif next_coordinate[1] >= self.target_y:
-                     hit_target = True
 
-            self.current_x, self.current_y = next_coordinate
+         self.current_x, self.current_y = next_coordinate
 
          if self.fire_movements > self.enemy_movements + 5:
             self.enemy_movements += 4
@@ -124,10 +105,11 @@ class Towers:
          else:
             within_tolerance = True
 
+      # explosion animation
       for i in range(1, 6):
          for x in range(3):
             self.fire_animation_back.append(self.back)
-            self.fire_animation_ammo.append((self.target_x, self.target_y, self.all_images['explode' + str(i)]))
+            self.fire_animation_ammo.append((self.target_x - 12, self.target_y, self.all_images['explode' + str(i)]))
             self.fire_animation_front.append(self.front)
 
 
@@ -189,7 +171,7 @@ class Towers:
       self.target_y = y + (self.target.height / 2)
 
    @staticmethod
-   def get_next_coordinate(point_a, point_b, movement):
+   def get_next_coordinate(point_a: Tuple[float, float], point_b: Tuple[float, float], movement: float) -> Tuple[float, float]:
       """
       get the next coordinates from point_a to point_b a traveling a distance of movement
       :param point_a:
@@ -202,3 +184,24 @@ class Towers:
       ratio_of_distance = movement / distance
 
       return ((1 - ratio_of_distance) * point_a[0] + ratio_of_distance * point_b[0]), ((1 - ratio_of_distance) * point_a[1] + ratio_of_distance * point_b[1])
+
+   @staticmethod
+   def get_path(start_pos: Tuple[int, int], target: Tuple[int, int], time_interval=0.2, time_to_reach=8.0, gravity=-9.8) -> List[Tuple[int, int]]:
+      current_time = 0
+      path = []
+
+      x_distance = target[0] - start_pos[0]
+      y_distance = start_pos[1] - target[1]
+
+      x_velocity = x_distance / time_to_reach
+      y_velocity = (y_distance - ((gravity * time_to_reach ** 2) / 2)) / time_to_reach
+
+      while current_time < time_to_reach:
+         current_time += time_interval
+
+         x_increment = x_velocity * current_time
+         y_increment = (y_velocity * current_time) + ((gravity * current_time ** 2) / 2)
+
+         path.append((round(start_pos[0] + x_increment), round(start_pos[1] - y_increment)))
+
+      return path
