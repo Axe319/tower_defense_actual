@@ -34,6 +34,16 @@ class Game:
       self.towers = []
       self.enemies = [] # enemy instances this wave
 
+      # all enemy class level pairings
+      self.enemy_classes = [(Dagger, 1),
+                       (Jarhead, 1),
+                       (Fork, 1),
+                       (Sword, 1),
+                       (Rapier, 1),
+                       (Bat, 1),
+                       (Bat, 2)
+                       ]
+
       self.wave_active = True
       self.last_enemy_gen = time.time() + 10 # give 10 seconds to prep
       self.enemies_this_wave = 0 # enemies we've generated this wave
@@ -175,17 +185,9 @@ class Game:
          num_of_paths = len(self.paths) - 1
          path = self.paths[randint(0, num_of_paths)]
 
-         # regen all enemies and pick the correct one
-         enemy_classes = [(Dagger(path), 1),
-            (Jarhead(path), 1),
-            (Fork(path), 1),
-            (Sword(path), 1),
-            (Rapier(path), 1),
-            (Bat(path), 1),
-            (Bat(path), 2)
-            ]
-         enemy_class, enemy_level = enemy_classes[randint(0, self.max_level)]
-         self.enemies.append(enemy_class)
+         # gen one enemy from the list of classes
+         enemy_class, enemy_level = self.enemy_classes[randint(0, self.max_level)]
+         self.enemies.append(enemy_class(path))
 
          # to avoid index oout of range
          # when we kill an enemy while wave is still genning
